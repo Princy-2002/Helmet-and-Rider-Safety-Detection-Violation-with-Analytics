@@ -6,7 +6,9 @@
 ---
 
 ## 📌 Executive Summary
+
 Road safety and traffic enforcement are urgent priorities on Indian roads, especially in high-density two-wheeler traffic hubs like Kerala. Rather than relying on static image classification or manual traffic police monitoring, this project implements an end-to-end AI/ML and Data Analytics system that:
+
 1. **Detects Safety Violations in Real Time:** Identifies motorcycle and scooter riders as well as pillion passengers traveling without helmets using fine-tuned Ultralytics YOLOv8 models.
 2. **Maintains a Structured Event Log:** Records timestamps, camera IDs, detection confidences, and rider counts for every violation event.
 3. **Delivers Temporal Analytics & Heatmaps:** Generates actionable compliance insights, peak violation windows, and multi-camera angle comparisons.
@@ -22,18 +24,18 @@ flowchart TD
     B -->|Confidence & IoU Thresholding| C{Classification}
     C -->|Class 0| D[With Helmet - Compliant 🟢]
     C -->|Class 1| E[Without Helmet - Violation 🔴]
-    
+
     D & E --> F[Dynamic Annotation & HUD Overlay]
     D & E --> G[Violation Logger<br/>src/violation_logger.py]
-    
+
     G --> H[(Structured Event Logs<br/>data/logs/)]
     G --> I[Privacy-Safe Export Engine]
-    
+
     H --> J[Analytics Engine<br/>src/analytics.py]
     J --> K[Temporal Trends & Peak Hours]
     J --> L[Severity Heatmaps]
     J --> M[Camera Perspective Comparisons]
-    
+
     F & J --> N[Streamlit Interactive App<br/>app.py - Week 3]
 ```
 
@@ -41,12 +43,12 @@ flowchart TD
 
 ## 🗓️ Project Roadmap & Milestones
 
-| Timeline | Focus Area | Status | Key Deliverables |
-| :--- | :--- | :---: | :--- |
-| **Week 1** | **Data Audit & Baseline Model** | ✅ **Completed** | • Pascal VOC annotation audit and coordinate bug fix (`/1000` fix for 17 corrupted XML boxes)<br/>• YOLO format dataset formatting (70/20/10 split)<br/>• Baseline YOLOv8n training for 50 epochs on Colab GPU (`mAP@50 = 87.59%`) |
-| **Week 2** | **Violation Logging & Analytics Core** | ✅ **Completed** | • Structured violation event schema (`src/violation_logger.py`)<br/>• Temporal analytics, peak hours & severity heatmaps (`src/analytics.py`)<br/>• Real-time inference pipeline with color-coded HUD rendering (`src/inference.py`)<br/>• Data augmentation strategy to boost violation recall |
-| **Week 3** | **Interactive Streamlit MVP** | ✅ **Completed** | • Streamlit application (`app.py`) with live webcam / video inference<br/>• Dynamic sensitivity tuning (confidence and IoU threshold sliders)<br/>• Real-time violation event log table with privacy-safe CSV download<br/>• Merged Plotly visualizer (Hourly trends, camera angle comparison, 2D severity heatmap) |
-| **Week 4** | **Temporal Dashboard & Final Demo** | ✅ **Completed** | • Automated Zero-PII privacy compliance audit suite (`scripts/run_privacy_audit.py`)<br/>• Privacy compliance certificate & report (`docs/PRIVACY_COMPLIANCE_AUDIT.md`)<br/>• Comprehensive model benchmark report & charts (`docs/FINAL_BENCHMARK_REPORT.md`)<br/>• Final demo walkthrough script & presentation deck (`docs/PRESENTATION_SLIDES.md`) |
+| Timeline   | Focus Area                             |      Status      | Key Deliverables                                                                                                                                                                                                                                                                                                                                       |
+| :--------- | :------------------------------------- | :--------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Week 1** | **Data Audit & Baseline Model**        | ✅ **Completed** | • Pascal VOC annotation audit and coordinate bug fix (`/1000` fix for 17 corrupted XML boxes)<br/>• YOLO format dataset formatting (70/20/10 split)<br/>• Baseline YOLOv8n training for 50 epochs on Colab GPU (`mAP@50 = 87.59%`)                                                                                                                     |
+| **Week 2** | **Violation Logging & Analytics Core** | ✅ **Completed** | • Structured violation event schema (`src/violation_logger.py`)<br/>• Temporal analytics, peak hours & severity heatmaps (`src/analytics.py`)<br/>• Real-time inference pipeline with color-coded HUD rendering (`src/inference.py`)<br/>• Data augmentation strategy to boost violation recall                                                        |
+| **Week 3** | **Interactive Streamlit MVP**          | ✅ **Completed** | • Streamlit application (`app.py`) with live webcam / video inference<br/>• Dynamic sensitivity tuning (confidence and IoU threshold sliders)<br/>• Real-time violation event log table with privacy-safe CSV download<br/>• Merged Plotly visualizer (Hourly trends, camera angle comparison, 2D severity heatmap)                                    |
+| **Week 4** | **Temporal Dashboard & Final Demo**    | ✅ **Completed** | • Automated Zero-PII privacy compliance audit suite (`scripts/run_privacy_audit.py`)<br/>• Privacy compliance certificate & report (`docs/PRIVACY_COMPLIANCE_AUDIT.md`)<br/>• Comprehensive model benchmark report & charts (`docs/FINAL_BENCHMARK_REPORT.md`)<br/>• Final demo walkthrough script & presentation deck (`docs/PRESENTATION_SLIDES.md`) |
 
 ---
 
@@ -107,10 +109,11 @@ From the held-out test split evaluation (77 images, 156 instances) in `HelmetSaf
 - **Recall:** `79.10%`
 
 ### Per-Class Performance
-| Class Name | Instances | Precision | Recall | mAP@50 | Status |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **With Helmet** | 89 | 85.9% | 88.8% | 91.6% | Strong detection |
-| **Without Helmet** *(Violation)* | 67 | 82.3% | **69.4%** | 83.6% | **Target for Week 2 Tuning** |
+
+| Class Name                       | Instances | Precision |  Recall   | mAP@50 |            Status            |
+| :------------------------------- | :-------: | :-------: | :-------: | :----: | :--------------------------: |
+| **With Helmet**                  |    89     |   85.9%   |   88.8%   | 91.6%  |       Strong detection       |
+| **Without Helmet** _(Violation)_ |    67     |   82.3%   | **69.4%** | 83.6%  | **Target for Week 2 Tuning** |
 
 > **Diagnostic Finding:**  
 > The lower recall for the violation class (69.4%) indicates that approximately 3 out of 10 unhelmeted riders are currently missed by the baseline model, primarily due to distant pillion riders, low contrast shadows, and helmet-like hairstyles. Week 2 fine-tuning introduces targeted augmentations (Mosaic, Mixup, HSV brightness jitter) to close this recall gap.
@@ -120,7 +123,9 @@ From the held-out test split evaluation (77 images, 156 instances) in `HelmetSaf
 ## ⚙️ Module Usage & Verification
 
 ### 1. Structured Violation Logging (`src/violation_logger.py`)
+
 Records detection events into standardized schemas and generates anonymized summary tables:
+
 ```python
 from src.violation_logger import ViolationLogger
 
@@ -142,7 +147,9 @@ logger.generate_privacy_safe_export("data/logs/privacy_report.csv")
 ```
 
 ### 2. Temporal Analytics & Visualizations (`src/analytics.py`)
+
 Computes KPIs, peak violation hours, and generates interactive Plotly figures:
+
 ```python
 import pandas as pd
 from src.analytics import ViolationAnalytics
@@ -162,7 +169,9 @@ fig_camera = analytics.plot_camera_comparison()
 ```
 
 ### 3. Real-Time Inference & Dynamic HUD (`src/inference.py`)
+
 Runs YOLO inference with real-time threshold sliders and color-coded bounding boxes:
+
 ```python
 import cv2
 from src.inference import HelmetDetector
@@ -185,7 +194,9 @@ annotated_frame, detections, record = detector.process_frame(
 ---
 
 ## 🔒 Privacy & Ethical Governance
+
 To prevent surveillance abuse and comply with modern data privacy frameworks:
+
 - **No License Plate Recognition (ALPR):** License plates are neither bounded nor stored.
 - **Zero Facial Data Retention:** No facial crops, identity features, or biometric embeddings are collected.
 - **Aggregated Reporting:** All public or exported reports are strictly aggregated into hourly/daily violation totals and compliance rates.
@@ -206,3 +217,5 @@ venv\Scripts\activate      # Windows
 # 3. Install dependencies
 pip install -r requirements.txt
 ```
+
+# Helmet-and-Rider-Safety-Detection-Violation-with-Analytics
