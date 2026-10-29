@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches and environments
+.env
+.venv
+env/
+venv/
+ENV/
+.pytest_cache/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary video processing files
+*.mp4
+*.avi
+*.mov
+temp_*.mp4
+
+# Keep sample dataset but ignore generated live session logs
+data/logs/violation_logs_*.csv
+data/logs/violation_logs_*.json
+data/logs/violations_*.csv
